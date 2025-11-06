@@ -9,4 +9,4 @@ router.post('/', notesController.createNote);
 router.patch('/:noteId', notesController.updateNote);
 router.delete('/:noteId', notesController.deleteNote);
 
-export const notesRoutes = router;
+export default router;

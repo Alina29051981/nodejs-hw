@@ -2,51 +2,51 @@ import createError from 'http-errors';
 import { Note } from '../models/note.js';
 
 export const getAllNotes = async (req, res, next) => {
-  try {
-    const notes = await Note.find();
-    res.json(notes);
-  } catch (error) {
-    next(error);
-  }
+  const notes = await Note.find();
+  res.status(200).json(notes);
 };
 
 export const getNoteById = async (req, res, next) => {
-  try {
-    const note = await Note.findById(req.params.noteId);
-    if (!note) throw createError(404, 'Note not found');
-    res.json(note);
-  } catch (error) {
-    next(error);
+  const { noteId } = req.params;
+  const note = await Note.findById(noteId);
+
+  if (!note) {
+    next(createError(404, 'Note not found'));
+    return;
   }
+
+  res.status(200).json(note);
 };
 
 export const createNote = async (req, res, next) => {
-  try {
-    const note = await Note.create(req.body);
-    res.status(201).json(note);
-  } catch (error) {
-    next(error);
-  }
+  const note = await Note.create(req.body);
+  res.status(201).json(note);
 };
 
 export const updateNote = async (req, res, next) => {
-  try {
-    const note = await Note.findByIdAndUpdate(req.params.noteId, req.body, {
-      new: true,
-    });
-    if (!note) throw createError(404, 'Note not found');
-    res.json(note);
-  } catch (error) {
-    next(error);
+  const { noteId } = req.params;
+
+  const note = await Note.findOneAndUpdate({ _id: noteId }, req.body, {
+    new: true,
+  });
+
+  if (!note) {
+    next(createError(404, 'Note not found'));
+    return;
   }
+  res.status(200).json(note);
 };
 
 export const deleteNote = async (req, res, next) => {
-  try {
-    const note = await Note.findByIdAndDelete(req.params.noteId);
-    if (!note) throw createError(404, 'Note not found');
-    res.json({ message: 'Note deleted successfully' });
-  } catch (error) {
-    next(error);
+  const { noteId } = req.params;
+  const note = await Note.findOneAndDelete({
+    _id: noteId,
+  });
+
+  if (!note) {
+    next(createError(404, 'Note not found'));
+    return;
   }
+
+  res.status(200).json(note);
 };
