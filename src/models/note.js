@@ -22,4 +22,14 @@ const noteSchema = new mongoose.Schema(
   { timestamps: true },
 );
 
+noteSchema.index(
+  { title: 'text', content: 'text' },
+  {
+    title: 'NoteTextIndex',
+    content: 'NoteTextIndex',
+    weights: { title: 10, content: 2 },
+    default_language: 'english',
+  },
+);
+
 export const Note = mongoose.model('Note', noteSchema, 'notes');
