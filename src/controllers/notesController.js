@@ -7,27 +7,34 @@ export const getAllNotes = async (req, res, next) => {
   const skip = (Number(page) - 1) * Number(perPage);
 
   const filter = {};
-  if (tag) filter.tag = tag;
-  if (search !== undefined) {
-    filter.$or = [
-      { title: { $regex: search, $options: 'i' } },
-      { content: { $regex: search, $options: 'i' } },
-    ];
+
+  if (tag) {
+    filter.tag = tag;
   }
 
-  const notesQuery = Note.find(filter);
+  if (search) {
+    filter.$text = { $search: search };
+  }
 
-  const [totalItems, notes] = await Promise.all([
-    notesQuery.clone().countDocuments(),
-    notesQuery.skip(skip).limit(perPage),
+  let notesQuery = Note.find(filter);
+
+  if (search) {
+    notesQuery = notesQuery
+      .select({ score: { $meta: 'textScore' } })
+      .sort({ score: { $meta: 'textScore' } });
+  }
+
+  const [totalNotes, notes] = await Promise.all([
+    Note.countDocuments(filter),
+    notesQuery.skip(skip).limit(Number(perPage)),
   ]);
 
-  const totalPages = Math.ceil(totalItems / perPage);
+  const totalPages = Math.ceil(totalNotes / Number(perPage));
 
   res.status(200).json({
-    page,
-    perPage,
-    totalItems,
+    page: Number(page),
+    perPage: Number(perPage),
+    totalNotes,
     totalPages,
     notes,
   });
@@ -61,14 +68,13 @@ export const updateNote = async (req, res, next) => {
     next(createError(404, 'Note not found'));
     return;
   }
+
   res.status(200).json(note);
 };
 
 export const deleteNote = async (req, res, next) => {
   const { noteId } = req.params;
-  const note = await Note.findOneAndDelete({
-    _id: noteId,
-  });
+  const note = await Note.findOneAndDelete({ _id: noteId });
 
   if (!note) {
     next(createError(404, 'Note not found'));
