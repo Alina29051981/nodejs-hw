@@ -1,85 +1,129 @@
 import createError from 'http-errors';
 import { Note } from '../models/note.js';
+import { TAGS } from '../constants/tags.js';
 
 export const getAllNotes = async (req, res, next) => {
-  const { page = 1, perPage = 10, tag, search } = req.query;
+  try {
+    let { page = 1, perPage = 10, tag, search } = req.query;
 
-  const skip = (Number(page) - 1) * Number(perPage);
+    page = Number(page);
+    perPage = Number(perPage);
 
-  const filter = {};
+    if (!Number.isInteger(page) || page < 1) page = 1;
+    if (!Number.isInteger(perPage) || perPage < 1) perPage = 10;
 
-  if (tag) {
-    filter.tag = tag;
+    const MAX_PAGE = 30;
+    if (perPage > MAX_PAGE) perPage = MAX_PAGE;
+
+    const filter = {};
+
+    if (tag) {
+      if (!TAGS.includes(tag)) {
+        throw createError(400, `Invalid tag. Allowed tags: ${TAGS.join(', ')}`);
+      }
+      filter.tag = tag;
+    }
+
+    if (search?.trim()) {
+      filter.$text = { $search: search };
+    }
+
+    const skip = (page - 1) * perPage;
+
+    let notesQuery = Note.find(filter);
+
+    if (search?.trim()) {
+      notesQuery = notesQuery
+        .select({
+          score: { $meta: 'textScore' },
+          title: 1,
+          content: 1,
+          tag: 1,
+          createdAt: 1,
+          updatedAt: 1,
+        })
+        .sort({ score: { $meta: 'textScore' } });
+    } else {
+      notesQuery = notesQuery
+        .select({ title: 1, content: 1, tag: 1, createdAt: 1, updatedAt: 1 })
+        .sort({ createdAt: -1 });
+    }
+
+    const [totalNotes, notes] = await Promise.all([
+      Note.countDocuments(filter),
+      notesQuery.skip(skip).limit(perPage).exec(),
+    ]);
+
+    const totalPages = totalNotes === 0 ? 0 : Math.ceil(totalNotes / perPage);
+
+    res.status(200).json({ page, perPage, totalNotes, totalPages, notes });
+  } catch (error) {
+    next(error);
   }
-
-  if (search) {
-    filter.$text = { $search: search };
-  }
-
-  let notesQuery = Note.find(filter);
-
-  if (search) {
-    notesQuery = notesQuery
-      .select({ score: { $meta: 'textScore' } })
-      .sort({ score: { $meta: 'textScore' } });
-  }
-
-  const [totalNotes, notes] = await Promise.all([
-    Note.countDocuments(filter),
-    notesQuery.skip(skip).limit(Number(perPage)),
-  ]);
-
-  const totalPages = Math.ceil(totalNotes / Number(perPage));
-
-  res.status(200).json({
-    page: Number(page),
-    perPage: Number(perPage),
-    totalNotes,
-    totalPages,
-    notes,
-  });
 };
 
 export const getNoteById = async (req, res, next) => {
-  const { noteId } = req.params;
-  const note = await Note.findById(noteId);
-
-  if (!note) {
-    next(createError(404, 'Note not found'));
-    return;
+  try {
+    const { noteId } = req.params;
+    const note = await Note.findById(noteId);
+    if (!note) throw createError(404, 'Note not found');
+    res.status(200).json(note);
+  } catch (error) {
+    next(error);
   }
-
-  res.status(200).json(note);
 };
 
 export const createNote = async (req, res, next) => {
-  const note = await Note.create(req.body);
-  res.status(201).json(note);
+  try {
+    const { title, content = '', tag = 'Todo' } = req.body;
+
+    if (!title) throw createError(400, 'Title is required');
+    if (tag && !TAGS.includes(tag)) {
+      throw createError(400, `Invalid tag. Allowed tags: ${TAGS.join(', ')}`);
+    }
+
+    const newNote = await Note.create({ title, content, tag });
+    res.status(201).json(newNote);
+  } catch (error) {
+    next(error);
+  }
 };
 
 export const updateNote = async (req, res, next) => {
-  const { noteId } = req.params;
+  try {
+    const { noteId } = req.params;
+    const update = req.body;
 
-  const note = await Note.findOneAndUpdate({ _id: noteId }, req.body, {
-    new: true,
-  });
+    if (!update.title && !update.content && !update.tag) {
+      throw createError(
+        400,
+        'At least one of title, content, or tag must be provided',
+      );
+    }
 
-  if (!note) {
-    next(createError(404, 'Note not found'));
-    return;
+    if (update.tag && !TAGS.includes(update.tag)) {
+      throw createError(400, `Invalid tag. Allowed tags: ${TAGS.join(', ')}`);
+    }
+
+    const updatedNote = await Note.findByIdAndUpdate(noteId, update, {
+      new: true,
+      runValidators: true,
+    });
+
+    if (!updatedNote) throw createError(404, 'Note not found');
+    res.status(200).json(updatedNote);
+  } catch (error) {
+    next(error);
   }
-
-  res.status(200).json(note);
 };
 
 export const deleteNote = async (req, res, next) => {
-  const { noteId } = req.params;
-  const note = await Note.findOneAndDelete({ _id: noteId });
-
-  if (!note) {
-    next(createError(404, 'Note not found'));
-    return;
+  try {
+    const { noteId } = req.params;
+    const deletedNote = await Note.findByIdAndDelete(noteId);
+    if (!deletedNote) throw createError(404, 'Note not found');
+    res.status(200).json(deletedNote);
+  } catch (error) {
+    next(error);
   }
-
-  res.status(200).json(note);
 };
