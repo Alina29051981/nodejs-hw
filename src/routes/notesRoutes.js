@@ -12,18 +12,18 @@ const router = express.Router();
 
 router.get('/notes', celebrate(getAllNotesSchema), notesController.getAllNotes);
 router.get(
-  'notes/:noteId',
+  '/notes/:noteId',
   celebrate(noteIdSchema),
   notesController.getNoteById,
 );
 router.post('/notes', celebrate(createNoteSchema), notesController.createNote);
 router.delete(
-  'notes/:noteId',
+  '/notes/:noteId',
   celebrate(noteIdSchema),
   notesController.deleteNote,
 );
 router.patch(
-  'notes/:noteId',
+  '/notes/:noteId',
   celebrate(updateNoteSchema),
   notesController.updateNote,
 );

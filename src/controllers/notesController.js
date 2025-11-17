@@ -12,8 +12,8 @@ export const getAllNotes = async (req, res, next) => {
     if (!Number.isInteger(page) || page < 1) page = 1;
     if (!Number.isInteger(perPage) || perPage < 1) perPage = 10;
 
-    const MAX_PAGE = 30;
-    if (perPage > MAX_PAGE) perPage = MAX_PAGE;
+    const MAX_PER_PAGE = 100;
+    if (perPage > MAX_PER_PAGE) perPage = MAX_PER_PAGE;
 
     const filter = {};
 
@@ -75,7 +75,7 @@ export const getNoteById = async (req, res, next) => {
 
 export const createNote = async (req, res, next) => {
   try {
-    const { title, content = '', tag = 'Todo' } = req.body;
+    const { title, content = '', tag = 'Todo' } = req.body || {};
 
     if (!title) throw createError(400, 'Title is required');
     if (tag && !TAGS.includes(tag)) {
@@ -92,7 +92,7 @@ export const createNote = async (req, res, next) => {
 export const updateNote = async (req, res, next) => {
   try {
     const { noteId } = req.params;
-    const update = req.body;
+    const update = req.body || {};
 
     if (!update.title && !update.content && !update.tag) {
       throw createError(
