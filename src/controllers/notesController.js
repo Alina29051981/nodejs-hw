@@ -1,6 +1,5 @@
 import createError from 'http-errors';
 import { Note } from '../models/note.js';
-import { TAGS } from '../constants/tags.js';
 
 export const getAllNotes = async (req, res, next) => {
   try {
@@ -18,9 +17,6 @@ export const getAllNotes = async (req, res, next) => {
     const filter = {};
 
     if (tag) {
-      if (!TAGS.includes(tag)) {
-        throw createError(400, `Invalid tag. Allowed tags: ${TAGS.join(', ')}`);
-      }
       filter.tag = tag;
     }
 
@@ -51,7 +47,7 @@ export const getAllNotes = async (req, res, next) => {
 
     const [totalNotes, notes] = await Promise.all([
       Note.countDocuments(filter),
-      notesQuery.skip(skip).limit(perPage).exec(),
+      notesQuery.skip(skip).limit(perPage),
     ]);
 
     const totalPages = totalNotes === 0 ? 0 : Math.ceil(totalNotes / perPage);
@@ -75,14 +71,10 @@ export const getNoteById = async (req, res, next) => {
 
 export const createNote = async (req, res, next) => {
   try {
-    const { title, content = '', tag = 'Todo' } = req.body || {};
-
-    if (!title) throw createError(400, 'Title is required');
-    if (tag && !TAGS.includes(tag)) {
-      throw createError(400, `Invalid tag. Allowed tags: ${TAGS.join(', ')}`);
-    }
+    const { title, content = '', tag = 'Todo' } = req.body;
 
     const newNote = await Note.create({ title, content, tag });
+
     res.status(201).json(newNote);
   } catch (error) {
     next(error);
@@ -92,20 +84,8 @@ export const createNote = async (req, res, next) => {
 export const updateNote = async (req, res, next) => {
   try {
     const { noteId } = req.params;
-    const update = req.body || {};
 
-    if (!update.title && !update.content && !update.tag) {
-      throw createError(
-        400,
-        'At least one of title, content, or tag must be provided',
-      );
-    }
-
-    if (update.tag && !TAGS.includes(update.tag)) {
-      throw createError(400, `Invalid tag. Allowed tags: ${TAGS.join(', ')}`);
-    }
-
-    const updatedNote = await Note.findByIdAndUpdate(noteId, update, {
+    const updatedNote = await Note.findByIdAndUpdate(noteId, req.body, {
       new: true,
       runValidators: true,
     });
@@ -121,6 +101,7 @@ export const deleteNote = async (req, res, next) => {
   try {
     const { noteId } = req.params;
     const deletedNote = await Note.findByIdAndDelete(noteId);
+
     if (!deletedNote) throw createError(404, 'Note not found');
     res.status(200).json(deletedNote);
   } catch (error) {

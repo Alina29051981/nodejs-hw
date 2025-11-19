@@ -21,9 +21,9 @@ app.use(express.json());
 
 app.use(notesRoutes);
 
-app.use(celebrateErrors());
-
 app.use(notFoundHandler);
+
+app.use(celebrateErrors());
 
 app.use(errorHandler);
 
