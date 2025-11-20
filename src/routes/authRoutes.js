@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import { celebrate } from 'celebrate';
+import { authenticate } from '../middleware/authenticate.js';
 import {
   registerUser,
   loginUser,
@@ -12,6 +13,8 @@ import {
 } from '../validations/authValidation.js';
 
 const router = Router();
+
+router.use(authenticate);
 
 router.post('/auth/register', celebrate(registerUserSchema), registerUser);
 router.post('/auth/login', celebrate(loginUserSchema), loginUser);

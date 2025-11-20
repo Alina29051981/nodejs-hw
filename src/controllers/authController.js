@@ -24,7 +24,7 @@ export const registerUser = async (req, res, next) => {
 
     setSessionCookies(res, newSession);
 
-    res.status(201).json({ message: 'User created' });
+    res.status(201).json(newUser);
   } catch (error) {
     next(error);
   }
@@ -50,10 +50,7 @@ export const loginUser = async (req, res, next) => {
 
     setSessionCookies(res, newSession);
 
-    res.status(200).json({
-      message: 'Logged in',
-      user: { email: user.email, _id: user._id },
-    });
+    res.status(200).json(user);
   } catch (error) {
     next(error);
   }
