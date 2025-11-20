@@ -14,7 +14,7 @@ export const getAllNotes = async (req, res, next) => {
     const MAX_PER_PAGE = 100;
     if (perPage > MAX_PER_PAGE) perPage = MAX_PER_PAGE;
 
-    const filter = {};
+    const filter = { userId: req.user._id };
 
     if (tag) {
       filter.tag = tag;
@@ -61,8 +61,13 @@ export const getAllNotes = async (req, res, next) => {
 export const getNoteById = async (req, res, next) => {
   try {
     const { noteId } = req.params;
-    const note = await Note.findById(noteId);
+    const note = await Note.findOne({
+      _id: noteId,
+      userId: req.user._id,
+    });
+
     if (!note) throw createError(404, 'Note not found');
+
     res.status(200).json(note);
   } catch (error) {
     next(error);
@@ -73,7 +78,12 @@ export const createNote = async (req, res, next) => {
   try {
     const { title, content = '', tag = 'Todo' } = req.body;
 
-    const newNote = await Note.create({ title, content, tag });
+    const newNote = await Note.create({
+      title,
+      content,
+      tag,
+      userId: req.user._id,
+    });
 
     res.status(201).json(newNote);
   } catch (error) {
@@ -85,10 +95,17 @@ export const updateNote = async (req, res, next) => {
   try {
     const { noteId } = req.params;
 
-    const updatedNote = await Note.findByIdAndUpdate(noteId, req.body, {
-      new: true,
-      runValidators: true,
-    });
+    const updatedNote = await Note.findOneAndUpdate(
+      {
+        _id: noteId,
+        userId: req.user._id,
+      },
+      req.body,
+      {
+        new: true,
+        runValidators: true,
+      },
+    );
 
     if (!updatedNote) throw createError(404, 'Note not found');
     res.status(200).json(updatedNote);
@@ -100,7 +117,10 @@ export const updateNote = async (req, res, next) => {
 export const deleteNote = async (req, res, next) => {
   try {
     const { noteId } = req.params;
-    const deletedNote = await Note.findByIdAndDelete(noteId);
+    const deletedNote = await Note.findOneAndDelete({
+      _id: noteId,
+      userId: req.user._id,
+    });
 
     if (!deletedNote) throw createError(404, 'Note not found');
     res.status(200).json(deletedNote);

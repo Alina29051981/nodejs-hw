@@ -7,8 +7,11 @@ import {
   createNoteSchema,
   updateNoteSchema,
 } from '../validations/notesValidation.js';
+import { authenticate } from '../middleware/authenticate.js';
 
 const router = express.Router();
+
+router.use('/notes', authenticate);
 
 router.get('/notes', celebrate(getAllNotesSchema), notesController.getAllNotes);
 router.get(
