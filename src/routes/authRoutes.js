@@ -1,6 +1,5 @@
 import { Router } from 'express';
 import { celebrate } from 'celebrate';
-import { authenticate } from '../middleware/authenticate.js';
 import {
   registerUser,
   loginUser,
@@ -16,7 +15,7 @@ const router = Router();
 
 router.post('/auth/register', celebrate(registerUserSchema), registerUser);
 router.post('/auth/login', celebrate(loginUserSchema), loginUser);
-router.post('/auth/logout', authenticate, logoutUser);
-router.post('/auth/refresh', authenticate, refreshUserSession);
+router.post('/auth/logout', logoutUser);
+router.post('/auth/refresh', refreshUserSession);
 
 export default router;
