@@ -5,10 +5,10 @@ a collection of Node.js homework and practice projects. Includes backend and ful
 **Live Demo:**
 https://nodejs-hw-5-y1uf.onrender.com
 
-![Vercel Status](https://img.shields.io/github/deployments/Alina29051981/nodejs-hw/Production?label=vercel)
 ![Last Commit](https://img.shields.io/github/last-commit/Alina29051981/nodejs-hw)
 ![Repo Size](https://img.shields.io/github/repo-size/Alina29051981/nodejs-hw)
 
+![Node](https://img.shields.io/badge/backend-Node-blueviolet)
 ![JavaScript](https://img.shields.io/badge/Language-JavaScript-yellow)
 
 
