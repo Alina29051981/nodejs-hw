@@ -1,6 +1,7 @@
 # HW-1
 Basic Node.js exercises focusing on core concepts: working with files, modules, and simple server-side scripts. Includes reading/writing files, module exports/imports, and handling basic asynchronous operations.
 
+**Live Demo:**
 https://nodejs-hw-81ky.onrender.com
 
 ![Vercel Status](https://img.shields.io/github/deployments/Alina29051981/nodejs-hw/edit/01-express/Production?label=vercel)
