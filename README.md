@@ -5,17 +5,26 @@ a collection of Node.js homework and practice projects. Includes backend and ful
 **Live Demo:**
 https://nodejs-hw-5-y1uf.onrender.com
 
-![Vercel Status](https://img.shields.io/github/deployments/Alina29051981/09-auth/Production?label=vercel)
-![Last Commit](https://img.shields.io/github/last-commit/Alina29051981/09-auth)
-![Repo Size](https://img.shields.io/github/repo-size/Alina29051981/09-auth)
+![Vercel Status](https://img.shields.io/github/deployments/Alina29051981/nodejs-hw/Production?label=vercel)
+![Last Commit](https://img.shields.io/github/last-commit/Alina29051981/nodejs-hw)
+![Repo Size](https://img.shields.io/github/repo-size/Alina29051981/nodejs-hw)
 
-![React](https://img.shields.io/badge/Frontend-React-blueviolet)
-![TypeScript](https://img.shields.io/badge/Language-TypeScript-red)
 ![JavaScript](https://img.shields.io/badge/Language-JavaScript-yellow)
-![CSS3](https://img.shields.io/badge/Styles-CSS3-blue)
 
-![GitHub stars](https://img.shields.io/github/stars/Alina29051981/09-auth?style=social)
-![GitHub issues](https://img.shields.io/github/issues/Alina29051981/09-auth)
+
+![GitHub stars](https://img.shields.io/github/stars/Alina29051981/nodejs-hw?style=social)
+![GitHub issues](https://img.shields.io/github/issues/Alina29051981/nodejs-hw)
+
+
+![Node.js](https://img.shields.io/badge/Node.js-339933?style=for-the-badge&logo=node.js&logoColor=white)
+![Express](https://img.shields.io/badge/Express-000000?style=for-the-badge&logo=express&logoColor=white)
+![MongoDB](https://img.shields.io/badge/MongoDB-47A248?style=for-the-badge&logo=mongodb&logoColor=white)
+
+![Backend](https://img.shields.io/badge/Backend-4B5563?style=for-the-badge)
+![JWT](https://img.shields.io/badge/JWT-000000?style=for-the-badge&logo=jsonwebtokens)
+![Cloudinary](https://img.shields.io/badge/Cloudinary-3448C5?style=for-the-badge&logo=cloudinary&logoColor=white)
+![Handlebars](https://img.shields.io/badge/Handlebars.js-f0772b?style=for-the-badge&logo=handlebarsdotjs&logoColor=white)
+
 
 ![Made with Love](https://img.shields.io/badge/Made%20with-%E2%99%A5-red)
 
