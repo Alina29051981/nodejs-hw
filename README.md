@@ -1,6 +1,8 @@
 # HW-1
 Basic Node.js exercises focusing on core concepts: working with files, modules, and simple server-side scripts. Includes reading/writing files, module exports/imports, and handling basic asynchronous operations.
 
+https://nodejs-hw-81ky.onrender.com
+
 ![Last Commit](https://img.shields.io/github/last-commit/Alina29051981/nodejs-hw)
 ![Repo Size](https://img.shields.io/github/repo-size/Alina29051981/nodejs-hw)
 
