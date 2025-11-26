@@ -7,4 +7,3 @@ https://nodejs-hw-2-1gjw.onrender.com
 ![Render Status](https://img.shields.io/badge/Render-Running-brightgreen?logo=render)
 
 ![Last Commit](https://img.shields.io/github/last-commit/Alina29051981/nodejs-hw)
-![Repo Size](https://img.shields.io/github/repo-size/Alina29051981/nodejs-hw)
