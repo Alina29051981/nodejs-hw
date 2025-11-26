@@ -3,7 +3,7 @@
 a collection of Node.js homework and practice projects. Includes backend and fullstack exercises covering REST API, authentication, database operations, and integration with frontend frameworks like React and Next.js.
 
 **Live Demo:**
-https://09-auth-rho-two.vercel.app/
+https://nodejs-hw-5-y1uf.onrender.com
 
 ![Vercel Status](https://img.shields.io/github/deployments/Alina29051981/09-auth/Production?label=vercel)
 ![Last Commit](https://img.shields.io/github/last-commit/Alina29051981/09-auth)
