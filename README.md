@@ -5,6 +5,7 @@ a collection of Node.js homework and practice projects. Includes backend and ful
 **Live Demo:**
 https://nodejs-hw-5-y1uf.onrender.com
 
+![Render](https://img.shields.io/badge/Deployed%20on-Render-46E3B7?logo=render&logoColor=white)
 ![Last Commit](https://img.shields.io/github/last-commit/Alina29051981/nodejs-hw)
 ![Repo Size](https://img.shields.io/github/repo-size/Alina29051981/nodejs-hw)
 
